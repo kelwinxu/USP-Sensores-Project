@@ -84,6 +84,10 @@ audio = load_wav(filename)
 
 print("Analyzing echoes and extracting message...")
 symbols, decoded_text = decode_message(audio)
-
-print(f"\nDecoded Symbols (first 45): {symbols[:45]}...")
+if c.DEBUG:
+    debug_text = ""
+    for char in symbols:
+        if char == "2": debug_text += " "
+        debug_text += char
+    print(f"\nDecoded Symbols: {debug_text}")
 print(f"Decoded Message: {decoded_text}")

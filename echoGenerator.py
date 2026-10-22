@@ -5,9 +5,10 @@ import constants as c
 import functions as f
 # --- Settings ---
 OUTPUT_FILE = "echo_stego_music.wav"
+DEFAULT_MESSAGE = "Echo test"
 
 SAMPLE_RATE = c.SAMPLE_RATE
-BPM = c.BPM("MARIO")
+BPM = c.BPM
 D0 = c.D0
 D1 = c.D1
 D2 = c.D2
@@ -72,7 +73,7 @@ print("=== ECHO HIDING AUDIO GENERATOR ===")
 message = input("Enter the secret message to hide in the audio: ")
 
 if not message:
-    message = "Default test message"
+    message = DEFAULT_MESSAGE
     print(f"No input provided. Using default: '{message}'")
 
 # Convert text to binary string (0s and 1s)

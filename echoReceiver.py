@@ -14,16 +14,16 @@ STEP_SIZE = FRAME_LEN//4                # Sliding step (1/4 of a frame) to align
 NOISE_THRESHOLD = c.NOISE_THRESHOLD
 
 print("=== CONTINUOUS ECHO HIDING RECEIVER ===")
-print("Listening to microphone... Waiting for secret messages.")
+print("Active Audio Device:", sd.query_devices(kind="input")["name"])
 print("Press Ctrl+C to stop.\n")
-print("Decoded Text: ", end="", flush=True)
+print("Decoded Text:  ", end="", flush=True)
 
 # Rolling audio buffer of size FRAME_LEN
 audio_buffer = np.zeros(FRAME_LEN)
 with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32") as stream:
     try:
         while True:
-            # 1. Slide the window by STEP_SIZE (FRAME_LEN//4 samples) while searching for 'D2'
+            # Slide the window by STEP_SIZE (FRAME_LEN//4 samples) while searching for 'D2'
             new_data, _ = stream.read(STEP_SIZE)
             audio_buffer = np.concatenate([audio_buffer[STEP_SIZE:], new_data[:, 0]])
 
@@ -44,7 +44,7 @@ with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32") as stre
                     # Current audio_buffer was the exact center! Save peek_data for bit 1
                     bits_Lookahead = peek_data[:, 0]
 
-                # 2. Now we are aligned! Read the next 8 full frames (8 bits = 1 character)
+                # Now we are aligned! Read the next 8 full frames (8 bits = 1 character)
                 bits = ""
                 for bit_idx in range(8):
                     if bit_idx == 0 and bits_Lookahead is not None:
@@ -56,18 +56,33 @@ with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32") as stre
                         bit_frame = full_data[:, 0]
 
                     b0, b1, _ = f.analyze_frame(bit_frame)
-                    bits += "1" if b1 > b0 else "0"
+                    if b1 > b0:
+                        bits += "1"
+                        sys.stdout.write("1")
+                    else: 
+                        bits += "0"
+                        sys.stdout.write("0")
+                    sys.stdout.flush()
 
                 #Keep buffer updated with the last frame read
                 audio_buffer = bit_frame.copy()
 
-                # 3. Convert the 8 bits into an ASCII character and print it live
+                # Convert the 8 bits into an ASCII character and print it live
                 ascii_code = int(bits, 2)
-                if 32 <= ascii_code <= 126:
-                    sys.stdout.write(chr(ascii_code))
+                sys.stdout.write("\033[9D") # Goes back 9 characters to overwrite 1s and 0s and one " "
+                if 32 <= ascii_code <= 126 or c.PRINT_EVERYTHING:
+                    sys.stdout.write(chr(ascii_code) + "        ")
                 else:
-                    sys.stdout.write("?")
+                    sys.stdout.write("?" + "        ")
+                sys.stdout.write("\033[7D") # Goes back 7 characters to overwrite " "
                 sys.stdout.flush()
+
+                # a 10110101_   // cursor at the end
+                # a_10110101    // cursor goes back 9 char
+                # ab            // Print character and 8 " "s
+                # ab _          // cursor goes back 7 char
 
     except KeyboardInterrupt:
         print("\nReceiver stopped.")
+
+#systemctl --user restart pipewire pipewire-pulse wireplumber
