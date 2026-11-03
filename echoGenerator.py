@@ -13,7 +13,7 @@ D0 = c.D0
 D1 = c.D1
 D2 = c.D2
 FRAME_LEN = c.FRAME_LEN
-BASE_MELODY = c.MARIO                   # Base melody: list of (Note, Duration in beats)
+BASE_MELODY = c.UNIFORM              # Base melody: list of (Note, Duration in beats)
 ALPHA = c.ALPHA                         # Echo volume (attenuation factor)
 K = c.K                                 # Transition smoothing length
 
@@ -23,7 +23,7 @@ def embed_message(audio, bits):
     capacity_bits = total_frames - (total_frames % 9)
 
     if len(bits) > capacity_bits:
-        print("Warning: Message is too long and will be truncated")
+        print("Warning: Message is too long and will be truncated") #Obsolete
         bits = bits[:capacity_bits]
     else:
         # Pad the remaining capacity with trailing zeros
@@ -78,12 +78,15 @@ if not message:
 
 # Convert text to binary string (0s and 1s)
 bits = f.text_to_bits(message)
-required_bits = len(bits)
+required_bits = len(bits) + len(message)    # 0,1 + 2
 
 # Calculate how many melody loops are needed to fit the message
-samples_per_cycle = int(round(64 * (60.0 / BPM) * SAMPLE_RATE))
+samples_per_cycle = int(round(f.melody_length(BASE_MELODY) * (60.0 / BPM) * SAMPLE_RATE))
 frames_per_cycle = samples_per_cycle // FRAME_LEN
 loops = max(1, math.ceil(required_bits / frames_per_cycle))
+if(c.DEBUG): 
+    print(f"required bits {required_bits} for {len(message)} characters...")
+    print(f"samples_per_cycle {samples_per_cycle} and frames_per_cycle {frames_per_cycle}")
 
 print(f"\nGenerating music ({loops} loops to fit {len(message)} characters)...")
 full_notes = BASE_MELODY * loops

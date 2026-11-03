@@ -12,11 +12,13 @@ D2 = c.D2
 FRAME_LEN = c.FRAME_LEN
 STEP_SIZE = FRAME_LEN//4                # Sliding step (1/4 of a frame) to align with D2 automatically
 NOISE_THRESHOLD = c.NOISE_THRESHOLD
+new_line_counter = 1
+new_line_target = 20
 
 print("=== CONTINUOUS ECHO HIDING RECEIVER ===")
 print("Active Audio Device:", sd.query_devices(kind="input")["name"])
 print("Press Ctrl+C to stop.\n")
-print("Decoded Text:  ", end="", flush=True)
+print("Decoded Text:\n|  ", end="", flush=True)
 
 # Rolling audio buffer of size FRAME_LEN
 audio_buffer = np.zeros(FRAME_LEN)
@@ -75,7 +77,11 @@ with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32") as stre
                 else:
                     sys.stdout.write("?" + "        ")
                 sys.stdout.write("\033[7D") # Goes back 7 characters to overwrite " "
+                if(new_line_counter > new_line_target):
+                    sys.stdout.write("|\n|  ")
+                    new_line_counter = 0
                 sys.stdout.flush()
+                new_line_counter += 1
 
                 # a 10110101_   // cursor at the end
                 # a_10110101    // cursor goes back 9 char

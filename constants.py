@@ -5,12 +5,12 @@ BPM = 600
 D0 = 100                # Echo delay for bit 0 (in samples, default 150)
 D1 = 150                # Echo delay for bit 1 (in samples, default 200)
 D2 = 200                # Echo delay for symbol 2 (start of character marker)
-ALPHA = 0.3             # Echo volume (attenuation factor)
+ALPHA = 0.3               # Echo volume (attenuation factor)
 FRAME_LEN = 2*1024      # Audio chunk size per bit (L)
 NOISE_THRESHOLD = 0.05  # Avoid noise triggering D2 (0.04)
 K = FRAME_LEN//30       # Transition smoothing length
 
-PRINT_EVERYTHING = True # Receiver.py, whether to print every binary received (may break with \n and special characters)
+PRINT_EVERYTHING = False# Receiver.py, whether to print every binary received (may break with \n and special characters)
 
 # Musical note frequencies (in Hz)
 NOTES = {
@@ -20,6 +20,7 @@ NOTES = {
     "Bb4": 466.16, "B4": 493.88, "C5": 523.25, "C#5": 554.37, "D5": 587.33,
     "D#5": 622.25, "E5": 659.25, "F5": 698.46, "F#5": 739.99, "G5": 783.99,
     "G#5": 830.61, "A5": 880.00, "Bb5": 932.33, "B5": 987.77, "C6": 1046.50,
+    "ULTRA": 22000
 }
 
 # BPM = 600
@@ -70,6 +71,7 @@ LOOPING = [
     ("C4", 2), ("D4", 2), ("E4", 1), ("D4", 1), ("C4", 1), ("G3", 1),
 ]
 
-UNIFORM = [("D4", 4)]
+UNIFORM = [("B4", 4)]
+ULTRASOUND = [("ULTRA", 4)]
 
 

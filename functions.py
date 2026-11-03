@@ -121,3 +121,9 @@ def bits_to_char(bit_str, printable_only=False):
     if printable_only and not (32 <= ascii_code <= 126):
         return "?"
     return chr(ascii_code)
+
+def melody_length(melody):
+    len = 0
+    for _, note in melody:
+        len += note
+    return len
