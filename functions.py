@@ -25,9 +25,13 @@ def generate_melody(notes):
         else:
             freq = c.NOTES[note]                                    # Search for the frequency in NOTES
             t = np.arange(num_samples) / c.SAMPLE_RATE              # Creates a timeline in seconds for each note
-            wave_data = 0.25 * (np.sin(2.0 * np.pi * freq * t)      # sin wave with 35% intensity
-            + 0.5 * np.sin(2.0 * np.pi * freq*2 * t)
-            + 0.25 * np.sin(2.0 * np.pi * freq*3 * t))  
+            if note == "ULTRA" or freq * 2 >= c.SAMPLE_RATE / 2:
+                # Pure sine wave for ultrasound to prevent harmonic aliasing into audible frequencies
+                wave_data = 0.5 * np.sin(2.0 * np.pi * freq * t)
+            else:
+                wave_data = 0.25 * (np.sin(2.0 * np.pi * freq * t)      # sin wave with 35% intensity
+                + 0.5 * np.sin(2.0 * np.pi * freq*2 * t)
+                + 0.25 * np.sin(2.0 * np.pi * freq*3 * t))  
 
             # Fade in and fade out (5ms) to avoid clicking sounds
             fade_samples = int(0.005 * c.SAMPLE_RATE)               # How many samples is in 5ms

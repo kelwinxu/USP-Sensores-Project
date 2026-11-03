@@ -32,7 +32,7 @@ def audio_callback(outdata, frames, time_info, status):
 
     # 1. Fetch next chunk of music (fast numpy slicing)
     indices = (np.arange(FRAME_LEN) + pos) % melody_len
-    chunk = melody[indices] + np.random.normal(0.0, 0.006, size=FRAME_LEN)
+    chunk = melody[indices].copy()
     pos = (pos + FRAME_LEN) % melody_len
 
     # 2. Get the next symbol from the queue (or '0' if queue is empty)

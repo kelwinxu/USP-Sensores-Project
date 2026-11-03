@@ -78,7 +78,7 @@ if not message:
 
 # Convert text to binary string (0s and 1s)
 bits = f.text_to_bits(message)
-required_bits = len(bits) + len(message)    # 0,1 + 2
+required_bits = len(bits)
 
 # Calculate how many melody loops are needed to fit the message
 samples_per_cycle = int(round(f.melody_length(BASE_MELODY) * (60.0 / BPM) * SAMPLE_RATE))
