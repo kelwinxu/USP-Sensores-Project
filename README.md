@@ -370,7 +370,7 @@ Decoded Message: USP Sensores
 
 Opera como um modem acústico. Reproduz um fluxo de áudio contínuo e ininterrupto pela placa de som enquanto lê mensagens digitadas pelo usuário no terminal, transmitindo-as instantaneamente pelo alto-falante.
 
-#### ⚙️ Funcionamento Passo a Passo
+#### Funcionamento Passo a Passo
 
 1. **Callback de Áudio Assíncrono (`audio_callback`)**: Utiliza `sounddevice.OutputStream` com `blocksize = FRAME_LEN`. A cada requisição de 4096 amostras da placa de som:
 * Fatia o próximo pedaço da melodia em loop (`indices = (np.arange(FRAME_LEN) + pos) % melody_len`).
@@ -563,7 +563,7 @@ python echoTransmitter.py
 
 ---
 
-## 💡 Dicas de Calibração e Solução de Problemas
+## Dicas de Calibração e Solução de Problemas
 
 1. **Volume de Reprodução**:
 * Mantenha o volume da caixa de som em nível moderado (50% a 70%). Volumes excessivos provocam saturação (*clipping*) e harmônicos espúrios que degradam a detecção dos ecos.
@@ -598,6 +598,10 @@ systemctl --user restart pipewire pipewire-pulse wireplumber
 
 ---
 
-## 👥 Autoria
+## Autoria
 
 Projeto desenvolvido no âmbito da disciplina de Sensores da Universidade de São Paulo (USP).
+
+## Créditos
+
+Este projeto foi inspirado e parcialmente baseado no repositório [audio-steganography-algorithms](https://github.com/ktekeli/audio-steganography-algorithms)
