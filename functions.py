@@ -27,7 +27,7 @@ def generate_melody(notes):
             t = np.arange(num_samples) / c.SAMPLE_RATE              # Creates a timeline in seconds for each note
             if note == "ULTRA" or freq * 2 >= c.SAMPLE_RATE / 2:
                 # Pure sine wave for ultrasound to prevent harmonic aliasing into audible frequencies
-                wave_data = 0.5 * np.sin(2.0 * np.pi * freq * t)
+                wave_data = 0.7 * np.sin(2.0 * np.pi * freq * t)
             else:
                 wave_data = 0.25 * (np.sin(2.0 * np.pi * freq * t)      # sin wave with 35% intensity
                 + 0.5 * np.sin(2.0 * np.pi * freq*2 * t)
@@ -45,8 +45,8 @@ def generate_melody(notes):
 
     audio = np.concatenate(audio_parts)     # Makes it a single continuous array
 
-    # Add subtle background noise so the echo works even during silent rests
-    noise = np.random.normal(0.0, 0.004, size=len(audio))
+    # Subtle background noise to carry echo ripple over the air and during rests
+    noise = np.random.normal(0.0, 0.008, size=len(audio))
     return audio + noise
 
 def create_chunk_mixer(prev_symbol, curr_symbol, target_symbol, frame_len=c.FRAME_LEN, k=c.K):
@@ -80,17 +80,20 @@ def create_mixer_signal(bits, frame_len, target_symbol):
 def analyze_frame(frame):
     """Calculate Real Cepstrum and return echo strengths at D0, D1, and D2."""
 
-    
+    # Normalize frame amplitude to unit peak to preserve log dynamic range across volume levels
+    peak = np.max(np.abs(frame))
+    norm_frame = frame / peak if peak > 1e-4 else frame
+
     # Real Cepstrum: Re(IFFT(ln(|FFT(x)| + eps)))
-    windowed = frame * np.hanning(len(frame))   # Hann
+    windowed = norm_frame * np.hanning(len(norm_frame))   # Hann
     spec = np.abs(np.fft.fft(windowed))
     log_spec = np.log(spec + 1e-12)
     rceps = np.real(np.fft.ifft(log_spec))
 
-    # Take maximum in a small neighborhood (+/- 1 sample) to handle air/mic jitter
-    c0 = np.max(rceps[c.D0 - 1 : c.D0 + 2])
-    c1 = np.max(rceps[c.D1 - 1 : c.D1 + 2])
-    c2 = np.max(rceps[c.D2 - 1 : c.D2 + 2])
+    # Take maximum in neighborhood (+/- 3 samples) to handle air dispersion, mic jitter and clock drift
+    c0 = np.max(rceps[c.D0 - 3 : c.D0 + 4])
+    c1 = np.max(rceps[c.D1 - 3 : c.D1 + 4])
+    c2 = np.max(rceps[c.D2 - 3 : c.D2 + 4])
 
     return c0, c1, c2
 

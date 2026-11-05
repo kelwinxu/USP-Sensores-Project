@@ -2,15 +2,15 @@ DEBUG = True
 
 SAMPLE_RATE  = 44100
 BPM = 600
-D0 = 158                # Echo delay for bit 0 (in samples, non-harmonic)
-D1 = 215                # Echo delay for bit 1 (in samples, non-harmonic)
-D2 = 285                # Echo delay for symbol 2 (start of character marker, non-harmonic)
-ALPHA = 0.3               # Echo volume (attenuation factor)
-FRAME_LEN = 2*1024      # Audio chunk size per bit (L)
-NOISE_THRESHOLD = 0.05  # Avoid noise triggering D2 (0.04)
-K = FRAME_LEN//30       # Transition smoothing length
+D0 = 158                    # Echo delay for bit 0 (in samples, non-harmonic)
+D1 = 215                    # Echo delay for bit 1 (in samples, non-harmonic)
+D2 = 285                    # Echo delay for symbol 2 (start of character marker, non-harmonic)
+ALPHA = 0.5                 # Echo volume (attenuation factor)
+FRAME_LEN = 4*1024          # Audio chunk size per bit (L)
+NOISE_THRESHOLD = 0.03      # Over-the-air threshold (0.04 avoids noise)
+K = FRAME_LEN//30           # Transition smoothing length
 
-PRINT_EVERYTHING = False# Receiver.py, whether to print every binary received (may break with \n and special characters)
+PRINT_EVERYTHING = False    # Receiver.py, whether to print every binary received (may break with \n and special characters)
 
 # Musical note frequencies (in Hz)
 NOTES = {

@@ -39,8 +39,8 @@ def decode_message(signal):
     
         c0, c1, c2 = f.analyze_frame(frame)
 
-        # Whichever delay has the highest peak wins
-        if c2 >= c0 and c2 >= c1:
+        # Whichever delay has the highest peak wins (with noise threshold for D2)
+        if c2 >= c0 and c2 >= c1 and (c2 - max(c0, c1)) >= c.NOISE_THRESHOLD:
             symbols.append("2")
         elif c1 >= c0:
             symbols.append("1")

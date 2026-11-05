@@ -71,12 +71,12 @@ with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32") as stre
 
                 # Convert the 8 bits into an ASCII character and print it live
                 ascii_code = int(bits, 2)
-                sys.stdout.write("\033[9D") # Goes back 9 characters to overwrite 1s and 0s and one " "
+                sys.stdout.write("\033[8D") # Goes back 8 characters to overwrite the 8 bits
                 if 32 <= ascii_code <= 126 or c.PRINT_EVERYTHING:
-                    sys.stdout.write(chr(ascii_code) + "        ")
+                    sys.stdout.write(chr(ascii_code) + "       ")
                 else:
-                    sys.stdout.write("?" + "        ")
-                sys.stdout.write("\033[7D") # Goes back 7 characters to overwrite " "
+                    sys.stdout.write("?" + "       ")
+                sys.stdout.write("\033[7D") # Goes back 7 characters to leave cursor right after char
                 if(new_line_counter > new_line_target):
                     sys.stdout.write("|\n|  ")
                     new_line_counter = 0

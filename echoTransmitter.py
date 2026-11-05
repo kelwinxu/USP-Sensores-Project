@@ -12,10 +12,13 @@ D1 = c.D1
 D2 = c.D2
 FRAME_LEN = c.FRAME_LEN
 NOISE_THRESHOLD = c.NOISE_THRESHOLD
-BASE_MELODY = c.ULTRASOUND              # Base melody
+BASE_MELODY = c.MARIO                   # Base melody
 ALPHA = c.ALPHA                         # Echo volume (attenuation factor)
 K = c.K                                 # Transition smoothing length
-sd.default.device = "pulse"
+try:
+    sd.default.device = "pulse"
+except Exception:
+    pass
 
 # --- State Variables for Continuous Playback ---
 bit_queue = queue.Queue()
@@ -23,7 +26,7 @@ melody = f.generate_melody(BASE_MELODY)
 melody_len = len(melody)
 pos = 0
 history = np.zeros(D2)
-prev_symbol = "0"
+prev_symbol = None
 
 
 def audio_callback(outdata, frames, time_info, status):
@@ -35,11 +38,11 @@ def audio_callback(outdata, frames, time_info, status):
     chunk = melody[indices].copy()
     pos = (pos + FRAME_LEN) % melody_len
 
-    # 2. Get the next symbol from the queue (or '0' if queue is empty)
+    # 2. Get the next symbol from the queue (or None if queue is empty = clean audio)
     if not bit_queue.empty():
         curr_symbol = bit_queue.get()
     else:
-        curr_symbol = "0"
+        curr_symbol = None
 
     # 3. Create the 3 delayed echoes using history + current chunk
     extended = np.concatenate([history, chunk])
@@ -85,7 +88,5 @@ with sd.OutputStream(
                     bit_queue.put(s)
                 print(f"  [Queued {len(msg)} chars -> {bit_queue.qsize()} symbols remaining]")
         except (KeyboardInterrupt, EOFError):
-            print("\nCtrl+C detectado! Fechando a stream e liberando o dispositivo...")
+            print("Transmitter stopped.")
             break
-
-print("Transmitter safely closed.")

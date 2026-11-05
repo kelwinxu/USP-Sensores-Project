@@ -13,7 +13,7 @@ D0 = c.D0
 D1 = c.D1
 D2 = c.D2
 FRAME_LEN = c.FRAME_LEN
-BASE_MELODY = c.UNIFORM              # Base melody: list of (Note, Duration in beats)
+BASE_MELODY = c.MARIO              # Base melody: list of (Note, Duration in beats)
 ALPHA = c.ALPHA                         # Echo volume (attenuation factor)
 K = c.K                                 # Transition smoothing length
 
@@ -82,7 +82,7 @@ required_bits = len(bits)
 
 # Calculate how many melody loops are needed to fit the message
 samples_per_cycle = int(round(f.melody_length(BASE_MELODY) * (60.0 / BPM) * SAMPLE_RATE))
-frames_per_cycle = samples_per_cycle // FRAME_LEN
+frames_per_cycle = max(1, samples_per_cycle // FRAME_LEN)
 loops = max(1, math.ceil(required_bits / frames_per_cycle))
 if(c.DEBUG): 
     print(f"required bits {required_bits} for {len(message)} characters...")
