@@ -191,18 +191,16 @@ flowchart TD
 
 ---
 
-## Demonstrações em Vídeo (Espaços Reservados)
+## Demonstrações em Vídeo
 
 ### Demonstração 1: Geração e Leitura Offline (`echoGenerator.py` & `echoReader.py`)
 
-*Demonstração do pipeline completo em arquivo: inserção do texto secreto na melodia, geração do arquivo `.wav` e extração automática pelo leitor cepstral.*
-
+![*Demonstração do pipeline completo em arquivo: inserção do texto secreto na melodia, geração do arquivo `.wav` e extração automática pelo leitor cepstral.*](echoGenerator.mp4)
 ---
 
 ### Demonstração 2: Transmissão e Recepção Acústica em Tempo Real (`echoTransmitter.py` & `echoReceiver.py`)
 
-*Demonstração da transmissão acústica sem fio pelo ar: texto digitado no transmissor sendo emitido pelo alto-falante, capturado pelo microfone e decodificado ao vivo no terminal do receptor.*
-
+![*Demonstração da transmissão acústica sem fio pelo ar: texto digitado no transmissor sendo emitido pelo alto-falante, capturado pelo microfone e decodificado ao vivo no terminal do receptor.*](echoTransmitter.mp4)
 ---
 
 ## Estrutura do Repositório
@@ -509,7 +507,7 @@ Decoded Text:
 ### 2. Clonar o Repositório e Configurar Ambiente
 
 ```bash
-git clone [https://github.com/SEU_USUARIO/USP-Sensores-Project.git](https://github.com/SEU_USUARIO/USP-Sensores-Project.git)
+git clone [https://github.com/kelwinxu/USP-Sensores-Project.git](https://github.com/kelwinxu/USP-Sensores-Project.git)
 cd USP-Sensores-Project
 
 # Criar ambiente virtual
@@ -584,7 +582,6 @@ BASE_MELODY = c.ULTRASOUND  # Portadora senoidal inaudível (19.5 kHz)
 
 ```
 
-
 * Outras opções disponíveis:
 ```python
 BASE_MELODY = c.UNIFORM  # Tom constante audível (B4 = 493.88 Hz)
@@ -592,20 +589,12 @@ BASE_MELODY = c.MARIO    # Melodia do Super Mario
 BASE_MELODY = c.LOOPING  # Melodia genérica loopável
 
 ```
-
-
-
-
 4. **Problemas com Áudio no Linux (PipeWire / PulseAudio)**:
 * Caso o SoundDevice não capture áudio ou apresente erros de dispositivo ocupado, reinicie os serviços de áudio do usuário:
 ```bash
 systemctl --user restart pipewire pipewire-pulse wireplumber
 
 ```
-
-
-
-
 
 ---
 
